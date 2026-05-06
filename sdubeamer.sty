@@ -1,0 +1,110 @@
+\NeedsTeXFormat{LaTeX2e}[1995/12/01]
+\ProvidesPackage{sdubeamer}[2024/12/01 Shandong University Beamer Theme]
+
+%% ===================================================================
+%% Package Options
+%% ===================================================================
+
+\RequirePackage{expl3}
+\ExplSyntaxOn
+
+\keys_define:nn { sdubeamer } {
+  color .tl_set:N = \l_@@_color_tl,
+  color .initial:n = { blue },
+}
+
+\ProcessOptionsX \scan_stop:
+
+%% ===================================================================
+%% Color Definition
+%% ===================================================================
+
+\definecolor{sdu@primary}{RGB}{0, 82, 147}
+\definecolor{sdu@secondary}{RGB}{0, 123, 182}
+\definecolor{sdu@accent}{RGB}{230, 126, 34}
+
+%% ===================================================================
+%% Theme Settings
+%% ===================================================================
+
+\mode<presentation>
+
+% Set Beamer theme
+\usetheme{default}
+\usecolortheme{seahorse}
+\usefonttheme{professionalfonts}
+
+% Custom colors
+\setbeamercolor{title page}{fg=white,bg=sdu@primary}
+\setbeamercolor{frametitle}{fg=sdu@primary,bg=white}
+\setbeamercolor{structure}{fg=sdu@primary}
+
+% Fonts
+\setbeamerfont{title}{size=\LARGE,series=\bfseries}
+\setbeamerfont{subtitle}{size=\large}
+\setbeamerfont{author}{size=\normalsize}
+\setbeamerfont{institute}{size=\small}
+
+\mode
+\allmodes
+
+%% ===================================================================
+%% Title Page Template
+%% ===================================================================
+
+\defbeamertemplate{title page}{sdu}{
+  \begin{centering}
+    \vspace*{2cm}
+    {\usebeamerfont{title}\usebeamercolor{title}\inserttitle\par}
+    \vspace*{1cm}
+    {\usebeamerfont{subtitle}\usebeamercolor{title}\insertsubtitle\par}
+    \vspace*{2cm}
+    {\usebeamerfont{author}\insertauthor\par}
+    \vspace*{0.5cm}
+    {\usebeamerfont{institute}\insertinstitute\par}
+    \vspace*{0.5cm}
+    {\usebeamerfont{date}\insertdate\par}
+    \vspace*{2cm}
+  \end{centering}
+}
+
+\setbeamertemplate{title page}[sdu]
+
+%% ===================================================================
+%% Section Page Template
+%% ===================================================================
+
+\defbeamertemplate{section page}{sdu}{
+  \begin{centering}
+    \vspace*{2cm}
+    {\LARGE\bfseries\insertsectionhead\par}
+    \vspace*{1cm}
+  \end{centering}
+}
+
+\setbeamertemplate{section page}[sdu]
+
+%% ===================================================================
+%% Frame Title
+%% ===================================================================
+
+\setbeamertemplate{frametitle}{
+  \nointerlineskip
+  \begin{beamercolorbox}[wd=\paperwidth,ht=2.5ex,dp=1ex]{frametitle}
+    \hspace*{0.5cm}
+    \Large\bfseries\insertframetitle
+  \end{beamercolorbox}
+}
+
+%% ===================================================================
+%% Navigation Symbols
+%% ===================================================================
+
+\setbeamertemplate{navigation symbols}{}
+
+%% ===================================================================
+%% Closing
+%% ===================================================================
+
+\ExplSyntaxOff
+\endinput
