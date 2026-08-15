@@ -51,4 +51,6 @@
 
 ## 许可证
 
-LaTeX Project Public License v1.3+
+本项目采用 [LaTeX Project Public License v1.3c](LICENSE)（LPPL v1.3+）。
+
+详见 [LICENSE](LICENSE) 文件。
