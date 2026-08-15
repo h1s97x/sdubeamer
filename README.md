@@ -43,11 +43,13 @@
 
 ## 相关仓库
 
-| 仓库 | 说明 |
-|------|------|
-| [sduthesis](https://github.com/h1s97x/sduthesis) | 论文模板 |
-| [sduttex](https://github.com/h1s97x/sduttex) | 核心包 |
-| [sdubeamer](https://github.com/h1s97x/sdubeamer) | 本仓库 - 幻灯片模板 |
+本项目属于山东大学 LaTeX 方案的一部分，各仓库分工如下。完整的仓库关系见 [REPOSITORIES.md](REPOSITORIES.md)。
+
+| 仓库 | 角色 | 说明 |
+|------|------|------|
+| [sdutex](https://cnb.cool/h1s97x/sdutex) | 核心包 | 论文核心代码（`sduthesis.cls` 等） |
+| [sduthesis](https://cnb.cool/h1s97x/sduthesis) | 论文模板 | 可直接使用的毕业论文模板 |
+| [sdubeamer](https://cnb.cool/h1s97x/sdubeamer) | 幻灯片模板 | 本仓库 - 答辩 Beamer 主题 |
 
 ## 许可证
 
