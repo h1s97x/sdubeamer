@@ -1,20 +1,22 @@
-# 复用脚本：配置 git 身份与 GitHub 认证（通过 credential.helper 避免将 TOKEN 写入 .git/config）
-.github-setup: &github-setup
-  name: setup-git-auth
-  script: |
-    set -e
-
-    # 配置提交身份
-    git config --global user.name "h1s97x"
-    git config --global user.email "h1s97x@users.noreply.github.com"
-
-    # 目标 GitHub 仓库（固定本仓库对应的 GitHub 地址）
-    GITHUB_REPO="h1s97x/sdubeamer"
-
-    # 添加 GitHub 远程，认证通过 credential.helper 提供，避免将 GITHUB_TOKEN 写进 .git/config
-    git remote remove github 2>/dev/null || true
-    git remote add github "https://github.com/${GITHUB_REPO}.git"
-    git config --global credential.helper '!f() { echo "username=x-access-token"; echo "password=${GITHUB_TOKEN}"; }; f'
+# CNB 流水线配置（参照 action-gh-social-graph 仓库最佳实践优化）
+# 0. 双向同步总览（重点）：
+#      - CNB → GitHub：push 到 main 时自动同步（见下方第 1 条）
+#      - GitHub → CNB：由 .github/workflows/sync-cnb.yml 兜底反向同步（直接改 GitHub 再回灌 CNB），
+#        与下方构成双向闭环，排除 .cnb*/.github/ 避免同步环死循环。
+# 1. Git Sync：每次 push 到 main 后，使用官方 tencentcom/git-sync 插件自动同步到 GitHub
+#    （h1s97x/sdubeamer），sync_mode: rebase（Rebase 模式），
+#    保留 GitHub 仓库特有平台文件（如 .github/workflows/*.yml），避免无条件 force 覆盖远端提交。
+#    敏感信息（GITHUB_USERNAME / GITHUB_TOKEN）存放在密钥仓库 secret-env，通过 imports 引用。
+# 2. 手动触发（Web Trigger）：
+#    - 同步到 GitHub：rebase 模式，将当前分支最新提交同步到 GitHub（保留 GitHub 端平台文件）
+#    - 从 GitHub 拉取：pull 模式，将 GitHub 远端最新提交拉取到 CNB 当前分支
+# 3. PR / Issue 自动分配处理人 / 审查人：
+#    - PR：git:reviewer 内置任务（add-assignee + add-reviewer-from-repo-members）
+#    - Issue：cnbcool/cnb-cli 插件 + cnb issues add-assignees 一行分配
+# 4. Tag 发布：v* tag 触发时创建 Release 并上传模板附件（.sty / examples / README / LICENSE）。
+# 注意：不要用 `.` 开头的 key 存引用源（如 `.maintainer`）——CNB 会把以 `.` 开头的 key
+# 当作 !reference 引用源，Schema 强制其为 array/object，字符串会触发 Schema 校验失败。
+# 维护者直接内联，换维护者时统一改下方两处（PR reviewer / Issue assignee）。
 
 main:
   push:
@@ -22,40 +24,105 @@ main:
       imports:
         - https://cnb.cool/h1s97x/secret-env/-/blob/main/env.yml
       stages:
-        - *github-setup
-        - name: push-to-github
-          # 自动同步：使用普通推送，避免 --force 覆盖 GitHub 端可能存在的分叉历史
-          script: |
-            set -e
-            git push github "HEAD:${CNB_BRANCH}"
+        - name: sync to github
+          image: tencentcom/git-sync
+          settings:
+            target_url: https://github.com/h1s97x/sdubeamer.git
+            auth_type: https
+            username: ${GITHUB_USERNAME}
+            password: ${GITHUB_TOKEN}
+            branch: main
+            push_tags: true
+            # Rebase 模式：保留 GitHub 仓库特有的平台文件（如 .github/workflows/*.yml），
+            # 同时避免无条件 force 覆盖 GitHub 远端的新提交。
+            sync_mode: rebase
 
+  # PR 创建后自动分配处理人和审查人
+  # 使用 git:reviewer 内置任务（无需脚本、自动注入鉴权）。
+  # 事件放目标分支（main）下，pull_request.target 用目标分支代码执行、且不校验触发者权限，
+  # 对跨仓协作者提交更友好。
+  #   处理人：type: add-assignee
+  #   审查人：type: add-reviewer-from-repo-members（从仓库成员中随机选一名评审人）
+  pull_request.target:
+    - name: auto-assign-pr-owner
+      env:
+        PR_REVIEWER: h1s97x
+      stages:
+        - name: assign pr to owner
+          type: git:reviewer
+          options:
+            type: add-assignee
+            reviewers: ${PR_REVIEWER}
+        - name: add pr reviewer
+          type: git:reviewer
+          options:
+            type: add-reviewer-from-repo-members
+
+# 兜底分支：web_trigger / issue.* 等事件
 $:
+  # 手动触发：同步当前分支到 GitHub（CNB → GitHub）
+  # 使用官方 tencentcom/git-sync 插件 + sync_mode: rebase（Rebase 模式）
   web_trigger_sync_github:
     - name: manual-sync-to-github
       imports:
         - https://cnb.cool/h1s97x/secret-env/-/blob/main/env.yml
       stages:
-        - *github-setup
-        - name: push-to-github
-          # 手动触发（用户主动确认）：保留 --force 以便覆盖远程强制同步
-          script: |
-            set -e
-            git push github "HEAD:${CNB_BRANCH}" --force
+        - name: sync to github
+          image: tencentcom/git-sync
+          settings:
+            target_url: https://github.com/h1s97x/sdubeamer.git
+            auth_type: https
+            username: ${GITHUB_USERNAME}
+            password: ${GITHUB_TOKEN}
+            branch: ${CNB_BRANCH}
+            # Rebase 模式：保留 GitHub 端平台文件，避免无条件 force 覆盖
+            sync_mode: rebase
 
+  # 手动触发：从 GitHub 拉取（GitHub → CNB）
+  # 使用官方 tencentcom/git-sync 插件 + sync_mode: pull（Pull 模式）
   web_trigger_pull_from_github:
     - name: manual-pull-from-github
       imports:
         - https://cnb.cool/h1s97x/secret-env/-/blob/main/env.yml
       stages:
-        - *github-setup
-        - name: configure-cnb-auth
-          # 使用 CNB_TOKEN 配置向 CNB 仓库推送的认证（用户名固定为 cnb）
+        - name: pull from github
+          image: tencentcom/git-sync
+          settings:
+            target_url: https://github.com/h1s97x/sdubeamer.git
+            auth_type: https
+            username: ${GITHUB_USERNAME}
+            password: ${GITHUB_TOKEN}
+            sync_mode: pull
+
+  # Issue 创建后自动分配处理人
+  # 使用官方 cnbcool/cnb-cli 插件（CNB OpenAPI 命令行工具），一行命令完成分配：
+  #   - 流水线自动注入 CNB_TOKEN，无需手写鉴权
+  #   - issue.open 事件自动注入 CNB_REPO_SLUG / CNB_ISSUE_IID，cnb 会识别快捷上下文
+  #   参考 https://cnb.cool/cnb/plugins/cnbcool/cnb-cli
+  issue.open:
+    - name: auto-assign-issue-owner
+      env:
+        ISSUE_ASSIGNEE: h1s97x
+      stages:
+        - name: assign issue to owner
+          image: cnbcool/cnb-cli
           script: |
             set -e
-            git remote set-url origin "https://cnb:${CNB_TOKEN}@cnb.cool/h1s97x/sdubeamer.git"
-        - name: pull-and-push-to-cnb
-          # 拉取 GitHub 最新提交，并强制推送到 CNB 对应分支（用户主动确认覆盖）
-          script: |
-            set -e
-            git fetch github "${CNB_BRANCH}:refs/remotes/github/${CNB_BRANCH}"
-            git push origin "refs/remotes/github/${CNB_BRANCH}:${CNB_BRANCH}" --force
+            cnb issues add-assignees --assignees $ISSUE_ASSIGNEE
+
+  # Tag 发布：v* tag 触发时创建 Release + 上传模板附件
+  tag_push:
+    - name: release-template
+      stages:
+        - name: create release
+          type: git:release
+          options:
+            descriptionFromFile: README.md
+        - name: upload release assets
+          image: cnbcool/attachments:latest
+          settings:
+            attachments:
+              - "./sdubeamer.sty"
+              - "./examples"
+              - "./LICENSE"
+              - "./README.md"

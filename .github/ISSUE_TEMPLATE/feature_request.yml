@@ -1,0 +1,54 @@
+name: Feature Request / 功能建议
+description: Suggest a new feature or improvement / 建议新功能或改进
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for sharing your idea! Please describe the feature you would like to see.
+        感谢分享你的想法！请描述你希望看到的功能。
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / 相关痛点
+      description: Is your feature request related to a problem? Describe it here. / 该功能是否与某个问题相关？请在此描述。
+      placeholder: "我在制作答辩幻灯片时总是遇到 ..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution / 建议方案
+      description: Describe the feature and how it should behave / 描述该功能及其预期行为
+      placeholder: "希望模板新增选项，可以支持 ..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: usage
+    attributes:
+      label: Example usage / 使用示例
+      description: Show how users would use the new feature / 演示用户如何使用该新功能
+      render: latex
+      placeholder: |
+        \documentclass{beamer}
+        \usepackage[新选项]{sdubeamer}
+        ...
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered / 备选方案
+      description: Any alternative solutions you've considered / 你考虑过的替代方案
+      placeholder: "或者，可以改为通过环境变量 / 宏命令实现 ..."
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Verification / 确认
+      description: Please confirm before submitting / 提交前请确认
+      options:
+        - label: I have searched existing issues and this is not a duplicate / 我已搜索过现有 Issue，此功能未被提出过
+          required: true
