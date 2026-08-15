@@ -23,11 +23,18 @@
 % 加载 SDUBeamer 模板，可选主题色 blue(默认)/red/cyan/green/purple
 \usepackage[color=blue]{sdubeamer}
 
+% 页脚学校名默认为「山东大学」，可通过 school 选项自定义：
+% \usepackage[school=山东大学 数学学院]{sdubeamer}
+
 % 如需自定义字体集（例如 Windows 系统自带字体），可覆盖 fontset 选项：
 % \usepackage[fontset=windows]{sdubeamer}
 
 % 若为纯英文场景，可关闭中文支持：
 % \usepackage[chinese=false]{sdubeamer}
+
+% 页眉默认显示当前章节名，页脚左侧显示学校名、右侧显示页码。
+% 如需在正文中临时覆盖页脚学校名，可使用 \sdufooter{}：
+% \sdufooter{山东大学 XX 学院}
 
 % 代码高亮（可选）
 \usepackage{listings}

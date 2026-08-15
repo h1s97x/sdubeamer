@@ -68,6 +68,23 @@ xelatex main.tex   # 建议执行两遍以解决交叉引用
 
 支持的字体集包括 `fandol`（默认）、`windows`、`mac`、`ubuntu` 等，详见 [`ctex` 宏包文档](https://ctan.org/pkg/ctex)。
 
+## 页眉 / 页脚
+
+模板内置了定制的页眉与页脚，体现山东大学视觉识别：
+
+- **页眉**：左侧显示当前章节名（`\section`），下方为一条主题色细线。
+- **页脚**：顶部为一条主题色细线，左侧显示学校名，右侧显示页码（`当前帧 / 总帧数`）。
+
+页脚学校名默认为「山东大学」，可通过 `school` 选项自定义，或在正文中用 `\sdufooter{}` 临时覆盖：
+
+```latex
+% 通过 school 选项设置页脚学校名
+\usepackage[school=山东大学 数学学院]{sdubeamer}
+
+% 或在正文中临时覆盖
+\sdufooter{山东大学 XX 学院}
+```
+
 ## 可选选项
 
 ```latex
@@ -76,11 +93,15 @@ xelatex main.tex   # 建议执行两遍以解决交叉引用
 
 % 自定义主题色
 \usepackage[color=green]{sdubeamer}
+
+% 自定义页脚学校名
+\usepackage[school=山东大学 数学学院]{sdubeamer}
 ```
 
 - `chinese`（默认开启）：接入 `ctex` 中文排版
 - `fontset`（默认 `fandol`）：指定 `ctex` 字体集
 - `color`（默认 `blue`）：主题色
+- `school`（默认 `山东大学`）：页脚显示的学校名
 
 ## 相关仓库
 

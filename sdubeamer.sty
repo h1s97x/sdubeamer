@@ -20,9 +20,16 @@
   % ctex 字体集（默认 fandol，跨平台免安装；可用 windows/mac 等覆盖）
   fontset .tl_set:N  = \l_@@_fontset_tl,
   fontset .initial:n = { fandol },
+  % 页脚学校名（默认山东大学，可通过 school 选项自定义）
+  school .tl_set:N  = \l_@@_school_tl,
+  school .initial:n = { 山东大学 },
 }
 
 \ProcessKeyOptions
+
+% 将页脚学校名复制到普通命令 \sdufootertext，供非 expl3 上下文使用
+% （\tl_set_eq:NN 使 \sdufootertext 与 expl3 变量同义，类型可被非 expl3 模式引用）
+\tl_set_eq:NN \sdufootertext \l_@@_school_tl
 
 %% ===================================================================
 %% Chinese Support (ctex / xeCJK)
@@ -90,12 +97,19 @@
 \setbeamercolor{title page}{fg=white,bg=sdu@primary}
 \setbeamercolor{frametitle}{fg=sdu@primary,bg=white}
 \setbeamercolor{structure}{fg=sdu@primary}
+\setbeamercolor{footline}{fg=sdu@secondary,bg=white}
+\setbeamercolor{headline}{fg=sdu@primary,bg=white}
+\setbeamercolor{page number}{fg=sdu@primary,bg=white}
+\setbeamercolor{footer school}{fg=sdu@secondary,bg=white}
 
 % Fonts
 \setbeamerfont{title}{size=\LARGE,series=\bfseries}
 \setbeamerfont{subtitle}{size=\large}
 \setbeamerfont{author}{size=\normalsize}
 \setbeamerfont{institute}{size=\small}
+\setbeamerfont{footline}{size=\footnotesize}
+\setbeamerfont{headline}{size=\scriptsize}
+\setbeamerfont{page number}{size=\footnotesize}
 
 \mode<all>
 
@@ -146,6 +160,53 @@
     \Large\bfseries\insertframetitle
   \end{beamercolorbox}
 }
+
+%% ===================================================================
+%% Header (Headline) Template
+%% ===================================================================
+
+% 页眉：左侧显示当前章节名，底部为一条 SDU 主题色分隔线
+% 使用 \insertsectionhead 显示章节名；无章节时留空
+\defbeamertemplate{headline}{sdu}
+  {
+    \begin{beamercolorbox}[wd=\paperwidth,ht=2.2ex,dp=0.6ex]{headline}
+      \hspace*{0.6cm}
+      {\usebeamerfont{headline}\insertsectionhead}
+      \hfill
+      \hspace*{0.6cm}
+    \end{beamercolorbox}
+    % 页眉底部 SDU 主题色细线
+    \nointerlineskip
+    \begin{beamercolorbox}[wd=\paperwidth,ht=1pt]{structure}
+    \end{beamercolorbox}
+  }
+
+\setbeamertemplate{headline}[sdu]
+
+%% ===================================================================
+%% Footer (Footline) Template
+%% ===================================================================
+
+% 页脚：顶部一条 SDU 主题色细线，左侧学校名，右侧页码
+\defbeamertemplate{footline}{sdu}
+  {
+    % 页脚顶部 SDU 主题色细线
+    \begin{beamercolorbox}[wd=\paperwidth,ht=1pt]{structure}
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[wd=\paperwidth,ht=2.2ex,dp=1ex]{footline}
+      \hspace*{0.6cm}
+      {\usebeamerfont{footer school}\sdufootertext}
+      \hfill
+      {\usebeamerfont{page number}%
+       \insertframenumber{}/\inserttotalframenumber}
+      \hspace*{0.6cm}
+    \end{beamercolorbox}
+  }
+
+\setbeamertemplate{footline}[sdu]
+
+% 供页脚使用的学校名命令（默认取 school 选项，用户可用 \sdufooter 覆盖）
+\newcommand\sdufooter[1]{\def\sdufootertext{#1}}
 
 %% ===================================================================
 %% Navigation Symbols
