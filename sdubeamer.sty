@@ -19,9 +19,40 @@
 %% Color Definition
 %% ===================================================================
 
-\definecolor{sdu@primary}{RGB}{0, 82, 147}
-\definecolor{sdu@secondary}{RGB}{0, 123, 182}
-\definecolor{sdu@accent}{RGB}{230, 126, 34}
+% 根据 color 选项切换对应的主题色三元组（默认 blue）
+\str_case:Vn \l_@@_color_tl
+  {
+    {red} {
+      \definecolor{sdu@primary}{RGB}{155, 20, 20}
+      \definecolor{sdu@secondary}{RGB}{200, 60, 60}
+      \definecolor{sdu@accent}{RGB}{255, 140, 0}
+    }
+    {cyan} {
+      \definecolor{sdu@primary}{RGB}{0, 130, 130}
+      \definecolor{sdu@secondary}{RGB}{0, 170, 170}
+      \definecolor{sdu@accent}{RGB}{255, 165, 0}
+    }
+    {green} {
+      \definecolor{sdu@primary}{RGB}{20, 120, 40}
+      \definecolor{sdu@secondary}{RGB}{40, 160, 60}
+      \definecolor{sdu@accent}{RGB}{255, 165, 0}
+    }
+    {purple} {
+      \definecolor{sdu@primary}{RGB}{110, 30, 130}
+      \definecolor{sdu@secondary}{RGB}{150, 60, 170}
+      \definecolor{sdu@accent}{RGB}{255, 140, 0}
+    }
+    {blue} {
+      \definecolor{sdu@primary}{RGB}{0, 82, 147}
+      \definecolor{sdu@secondary}{RGB}{0, 123, 182}
+      \definecolor{sdu@accent}{RGB}{230, 126, 34}
+    }
+  }
+  { % 未知选项回退到默认 blue
+    \definecolor{sdu@primary}{RGB}{0, 82, 147}
+    \definecolor{sdu@secondary}{RGB}{0, 123, 182}
+    \definecolor{sdu@accent}{RGB}{230, 126, 34}
+  }
 
 %% ===================================================================
 %% Theme Settings

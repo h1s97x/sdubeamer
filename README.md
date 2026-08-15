@@ -16,7 +16,7 @@
 
 ```latex
 \documentclass{beamer}
-\usepackage{sdubeamer}
+\usepackage[color=blue]{sdubeamer}   % 可选 blue(默认)/red/cyan/green/purple
 
 \begin{document}
 
