@@ -16,7 +16,7 @@
 
 ```latex
 \documentclass{beamer}
-\usepackage[color=blue]{sdubeamer}   % 可选 blue(默认)/red/cyan/green/purple
+\usepackage[color=blue]{sdubeamer}   % 默认已启用中文支持；可选 blue(默认)/red/cyan/green/purple
 
 \begin{document}
 
@@ -40,6 +40,47 @@
 
 \end{document}
 ```
+
+## 编译方法
+
+本模板内置中文支持（基于 `ctex`），**推荐使用 `xelatex` 编译**：
+
+```bash
+xelatex main.tex
+xelatex main.tex   # 建议执行两遍以解决交叉引用
+```
+
+> ⚠️ 由于依赖 `xeCJK`/`ctex`，**不能**使用默认的 `pdflatex` 或 `latex` 引擎编译含中文的文档。
+
+## 字体依赖
+
+模板默认采用 `ctex` 的 **fandol 字体集**（随 TeX Live 完整版内置，跨平台免安装），因此无需额外安装中文字体即可编译。
+
+如需使用系统自带字体集，可在加载时覆盖 `fontset` 选项：
+
+```latex
+% Windows：使用系统宋体/黑体等
+\usepackage[fontset=windows]{sdubeamer}
+
+% macOS：使用苹方/宋体等
+\usepackage[fontset=mac]{sdubeamer}
+```
+
+支持的字体集包括 `fandol`（默认）、`windows`、`mac`、`ubuntu` 等，详见 [`ctex` 宏包文档](https://ctan.org/pkg/ctex)。
+
+## 可选选项
+
+```latex
+% 关闭中文支持（纯英文场景）
+\usepackage[nocheinese]{sdubeamer}
+
+% 自定义主题色
+\usepackage[color=green]{sdubeamer}
+```
+
+- `chinese`（默认开启）：接入 `ctex` 中文排版
+- `fontset`（默认 `fandol`）：指定 `ctex` 字体集
+- `color`（默认 `blue`）：主题色
 
 ## 相关仓库
 

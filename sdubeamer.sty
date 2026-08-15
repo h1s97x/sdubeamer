@@ -9,11 +9,30 @@
 \ExplSyntaxOn
 
 \keys_define:nn { sdubeamer } {
-  color .tl_set:N = \l_@@_color_tl,
-  color .initial:n = { blue },
+  color .tl_set:N   = \l_@@_color_tl,
+  color .initial:n  = { blue },
+  % 是否启用中文支持（默认开启，推荐使用 xelatex 编译）
+  chinese .bool_set:N = \l_@@_chinese_bool,
+  chinese .default:n  = { true },
+  chinese .initial:n  = { true },
+  % ctex 字体集（默认 fandol，跨平台免安装；可用 windows/mac 等覆盖）
+  fontset .tl_set:N  = \l_@@_fontset_tl,
+  fontset .initial:n = { fandol },
 }
 
 \ProcessOptionsX \scan_stop:
+
+%% ===================================================================
+%% Chinese Support (ctex / xeCJK)
+%% ===================================================================
+
+\bool_if:NT \l_@@_chinese_bool
+  {
+    % 构造 ctex 选项并传递，默认使用 fandol 字体集（跨平台免安装）
+    \tl_set:Nx \l_tmpa_tl { fontset = \l_@@_fontset_tl }
+    \exp_args:NV \PassOptionsToPackage \l_tmpa_tl { ctex }
+    \RequirePackage[UTF8]{ctex}
+  }
 
 %% ===================================================================
 %% Color Definition
