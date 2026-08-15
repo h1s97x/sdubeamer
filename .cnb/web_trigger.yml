@@ -5,4 +5,9 @@ branch:
         description: 手动将当前分支的最新提交同步到 GitHub 仓库
         event: web_trigger_sync_github
         permissions:
-          roles: [master, developer]
+          roles: [owner, master, developer]
+      - name: 从 GitHub 拉取
+        description: 拉取 GitHub 仓库的最新提交并同步到当前 CNB 分支
+        event: web_trigger_pull_from_github
+        permissions:
+          roles: [owner, master, developer]

@@ -41,3 +41,21 @@ $:
           script: |
             set -e
             git push github "HEAD:${CNB_BRANCH}" --force
+
+  web_trigger_pull_from_github:
+    - name: manual-pull-from-github
+      imports:
+        - https://cnb.cool/h1s97x/secret-env/-/blob/main/env.yml
+      stages:
+        - *github-setup
+        - name: configure-cnb-auth
+          # 使用 CNB_TOKEN 配置向 CNB 仓库推送的认证（用户名固定为 cnb）
+          script: |
+            set -e
+            git remote set-url origin "https://cnb:${CNB_TOKEN}@cnb.cool/h1s97x/sdubeamer.git"
+        - name: pull-and-push-to-cnb
+          # 拉取 GitHub 最新提交，并强制推送到 CNB 对应分支（用户主动确认覆盖）
+          script: |
+            set -e
+            git fetch github "${CNB_BRANCH}:refs/remotes/github/${CNB_BRANCH}"
+            git push origin "refs/remotes/github/${CNB_BRANCH}:${CNB_BRANCH}" --force
