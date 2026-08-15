@@ -209,6 +209,76 @@
 \newcommand\sdufooter[1]{\def\sdufootertext{#1}}
 
 %% ===================================================================
+%% List (itemize / enumerate) Styles
+%% ===================================================================
+
+% itemize：定制各级项目符号，逐级呼应 SDU 品牌色
+% 一级三角、二级实心圆点、三级短横线，颜色由 sdu@primary/secondary/accent 递进
+\setbeamertemplate{itemize item}{\color{sdu@primary}$\blacktriangleright$}
+\setbeamertemplate{itemize subitem}{\color{sdu@secondary}$\bullet$}
+\setbeamertemplate{itemize subsubitem}{\color{sdu@accent}$-$}
+
+% enumerate：编号使用 SDU 主题色，两级缩进分别用 primary/secondary/accent
+\setbeamercolor{enumerate item}{fg=sdu@primary}
+\setbeamercolor{enumerate subitem}{fg=sdu@secondary}
+\setbeamercolor{enumerate subsubitem}{fg=sdu@accent}
+\setbeamercolor{item projected}{bg=sdu@primary,fg=white}
+\setbeamertemplate{enumerate item}{\insertenumlabel.}
+\setbeamertemplate{enumerate subitem}{\insertsubenumlabel.}
+\setbeamertemplate{enumerate subsubitem}{\insertsubsubenumlabel.}
+
+% itemize 模板采用右箭头形式的默认外观时，统一以主题色着色，保证视觉一致
+\setbeamercolor{itemize item}{fg=sdu@primary}
+\setbeamercolor{itemize subitem}{fg=sdu@secondary}
+\setbeamercolor{itemize subsubitem}{fg=sdu@accent}
+
+%% ===================================================================
+%% Block / Theorem / Example Styles
+%% ===================================================================
+
+% 普通 block：标题用 SDU 主色实心底，正文浅色底呼应品牌色
+\setbeamercolor{block title}{fg=white,bg=sdu@primary}
+\setbeamercolor{block body}{fg=black,bg=sdu@primary!10}
+\setbeamercolor{block title alerted}{fg=white,bg=sdu@accent}
+\setbeamercolor{block body alerted}{fg=black,bg=sdu@accent!15}
+\setbeamercolor{block title example}{fg=white,bg=sdu@secondary}
+\setbeamercolor{block body example}{fg=black,bg=sdu@secondary!12}
+
+% 定理类（theorem/lemma/corollary 等）：标题采用 SDU 主色
+\setbeamercolor{theorem title}{fg=sdu@primary,bg=sdu@primary!8}
+\setbeamercolor{theorem body}{fg=black}
+
+% example / alert 强调文本沿用 SDU 品牌色
+\setbeamercolor{example text}{fg=sdu@secondary}
+\setbeamercolor{alerted text}{fg=sdu@accent}
+\setbeamerfont{block title}{series=\bfseries}
+
+%% ===================================================================
+%% Caption (图/表标题) Styles
+%% ===================================================================
+
+% 图/表标题：名称（“图/表”字样）用 SDU 主色加粗，说明正文为黑色
+\setbeamercolor{caption name}{fg=sdu@primary}
+\setbeamercolor{caption}{fg=black}
+\setbeamerfont{caption name}{size=\small,series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+
+%% ===================================================================
+%% Hyperlink Colors
+%% ===================================================================
+
+% 超链接配色：链接用辅助色、聚焦/悬停用强调色，呼应 SDU 品牌色
+\setbeamercolor{hyperlink}{fg=sdu@secondary}
+\setbeamercolor{hyperlink focused}{fg=sdu@accent}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=sdu@primary,
+  urlcolor=sdu@secondary,
+  citecolor=sdu@accent,
+  anchorcolor=sdu@accent,
+}
+
+%% ===================================================================
 %% Navigation Symbols
 %% ===================================================================
 
