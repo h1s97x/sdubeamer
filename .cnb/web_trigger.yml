@@ -1,0 +1,8 @@
+branch:
+  - reg: ^(main|master)$
+    buttons:
+      - name: 同步到 GitHub
+        description: 手动将当前分支的最新提交同步到 GitHub 仓库
+        event: web_trigger_sync_github
+        permissions:
+          roles: [master, developer]

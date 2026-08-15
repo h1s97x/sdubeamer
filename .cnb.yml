@@ -1,0 +1,43 @@
+# 复用脚本：配置 git 身份与 GitHub 认证（通过 credential.helper 避免将 TOKEN 写入 .git/config）
+.github-setup: &github-setup
+  name: setup-git-auth
+  script: |
+    set -e
+
+    # 配置提交身份
+    git config --global user.name "h1s97x"
+    git config --global user.email "h1s97x@users.noreply.github.com"
+
+    # 目标 GitHub 仓库（固定本仓库对应的 GitHub 地址）
+    GITHUB_REPO="h1s97x/sdubeamer"
+
+    # 添加 GitHub 远程，认证通过 credential.helper 提供，避免将 GITHUB_TOKEN 写进 .git/config
+    git remote remove github 2>/dev/null || true
+    git remote add github "https://github.com/${GITHUB_REPO}.git"
+    git config --global credential.helper '!f() { echo "username=x-access-token"; echo "password=${GITHUB_TOKEN}"; }; f'
+
+main:
+  push:
+    - name: sync-to-github
+      imports:
+        - https://cnb.cool/h1s97x/secret-env/-/blob/main/env.yml
+      stages:
+        - *github-setup
+        - name: push-to-github
+          # 自动同步：使用普通推送，避免 --force 覆盖 GitHub 端可能存在的分叉历史
+          script: |
+            set -e
+            git push github "HEAD:${CNB_BRANCH}"
+
+$:
+  web_trigger_sync_github:
+    - name: manual-sync-to-github
+      imports:
+        - https://cnb.cool/h1s97x/secret-env/-/blob/main/env.yml
+      stages:
+        - *github-setup
+        - name: push-to-github
+          # 手动触发（用户主动确认）：保留 --force 以便覆盖远程强制同步
+          script: |
+            set -e
+            git push github "HEAD:${CNB_BRANCH}" --force
