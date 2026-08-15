@@ -1,0 +1,183 @@
+% =====================================================================
+% SDUBeamer 完整可编译示例
+% ---------------------------------------------------------------------
+% 编译方式（推荐，支持中文）：
+%   cd examples && TEXINPUTS=..:$TEXINPUTS xelatex demo.tex
+%   TEXINPUTS=..:$TEXINPUTS xelatex demo.tex   # 建议执行两遍以解决交叉引用
+%
+% 亦可从仓库根目录编译：
+%   xelatex -output-directory=examples examples/demo.tex
+%   （模板 sdubeamer.sty 位于仓库根目录，需确保可被 TEXINPUTS 找到）
+%
+% 亦可用 latexmk：
+%   latexmk -xelatex -cd examples/demo.tex
+%
+% 说明：
+%   - 本示例覆盖了标题页、章节页、内容帧、分栏、列表、
+%     数学公式、代码块、引用、表格等常见 Beamer 元素。
+%   - 模板默认开启中文支持（基于 ctex + fandol 字体集），
+%     因此必须使用 xelatex 编译。
+% =====================================================================
+\documentclass[aspectratio=169]{beamer}
+
+% 加载 SDUBeamer 模板，可选主题色 blue(默认)/red/cyan/green/purple
+\usepackage[color=blue]{sdubeamer}
+
+% 如需自定义字体集（例如 Windows 系统自带字体），可覆盖 fontset 选项：
+% \usepackage[fontset=windows]{sdubeamer}
+
+% 若为纯英文场景，可关闭中文支持：
+% \usepackage[chinese=false]{sdubeamer}
+
+% 代码高亮（可选）
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily\footnotesize,
+  breaklines=true,
+  frame=single,
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{sdu@primary}\bfseries,
+}
+
+% =====================================================================
+\begin{document}
+
+% --------------------------- 标题页 ---------------------------
+\title{SDUBeamer 幻灯片模板}
+\subtitle{山东大学 Beamer 主题使用示例}
+\author{张三}
+\institute{山东大学 计算机科学与技术学院}
+\date{2025 年 6 月}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% --------------------------- 目录 ---------------------------
+\begin{frame}{目录}
+  \tableofcontents
+\end{frame}
+
+% =====================================================================
+\section{模板介绍}
+
+\begin{frame}
+  \sectionpage
+\end{frame}
+
+\begin{frame}{SDUBeamer 简介}
+  \begin{itemize}
+    \item 面向山东大学学位论文答辩的 Beamer 主题
+    \item 支持本科生、硕士研究生、博士研究生答辩场景
+    \item 内置中文支持，基于 \texttt{ctex} 宏包
+  \end{itemize}
+
+  \vspace{0.5cm}
+  \begin{block}{主要特性}
+    \begin{enumerate}
+      \item 多种主题色可选（\texttt{blue}/\texttt{red}/\texttt{cyan}/\texttt{green}/\texttt{purple}）
+      \item 免安装的 \texttt{fandol} 字体集，跨平台可编译
+      \item 内置标题页、章节页等自定义模板
+    \end{enumerate}
+  \end{block}
+\end{frame}
+
+% =====================================================================
+\section{功能演示}
+
+\begin{frame}
+  \sectionpage
+\end{frame}
+
+\begin{frame}{分栏布局}
+  \begin{columns}
+    \begin{column}{0.48\textwidth}
+      \begin{block}{左侧栏}
+        使用 \texttt{columns} 环境可以实现左右分栏布局，
+        适合图文混排或对比展示。
+      \end{block}
+      \begin{alertblock}{警示框}
+        使用 \texttt{alertblock} 展示需要强调的内容。
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{exampleblock}{示例框}
+        使用 \texttt{exampleblock} 展示示例或结论。
+      \end{exampleblock}
+      \begin{itemize}
+        \item 要点一
+        \item 要点二
+        \item 要点三
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{数学公式}
+  高斯分布的概率密度函数为：
+  \[
+    f(x) = \frac{1}{\sqrt{2\pi\sigma^2}}
+    \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)
+  \]
+
+  欧拉恒等式：
+  \[
+    e^{i\pi} + 1 = 0
+  \]
+\end{frame}
+
+\begin{frame}[fragile]{代码展示}
+  \begin{lstlisting}[language=C++]
+#include <iostream>
+
+int main() {
+    std::cout << "Hello, SDUBeamer!" << std::endl;
+    return 0;
+}
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}{表格}
+  \begin{table}
+    \centering
+    \caption{示例数据}
+    \begin{tabular}{lcc}
+      \hline
+      项目 & 数量 & 备注 \\
+      \hline
+      章节 & 3     & 结构清晰 \\
+      帧数 & 8     & 演示充分 \\
+      代码块 & 1   & 语法高亮 \\
+      \hline
+    \end{tabular}
+  \end{table}
+\end{frame}
+
+\begin{frame}{逐条显示}
+  \begin{itemize}[<+->]
+    \item 第一条要点
+    \item 第二条要点
+    \item 第三条要点
+  \end{itemize}
+\end{frame}
+
+% =====================================================================
+\section{总结}
+
+\begin{frame}
+  \sectionpage
+\end{frame}
+
+\begin{frame}{总结}
+  \begin{block}{结语}
+    本示例演示了 SDUBeamer 模板的主要使用方式。
+    更多细节请参考项目的 \texttt{README.md} 文档。
+  \end{block}
+  \begin{center}
+    \large 感谢聆听！\\
+    \normalsize 欢迎提问与交流。
+  \end{center}
+\end{frame}
+
+\end{document}

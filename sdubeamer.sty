@@ -6,9 +6,11 @@
 %% ===================================================================
 
 \RequirePackage{expl3}
+% \ProcessKeyOptions 由 l3keys2e 提供，显式加载以消除对 beamer 的隐式依赖
+\RequirePackage{l3keys2e}
 \ExplSyntaxOn
 
-\keys_define:nn { sdubeamer } {
+\DeclareKeys {
   color .tl_set:N   = \l_@@_color_tl,
   color .initial:n  = { blue },
   % 是否启用中文支持（默认开启，推荐使用 xelatex 编译）
@@ -20,7 +22,7 @@
   fontset .initial:n = { fandol },
 }
 
-\ProcessOptionsX \scan_stop:
+\ProcessKeyOptions
 
 %% ===================================================================
 %% Chinese Support (ctex / xeCJK)
@@ -95,8 +97,7 @@
 \setbeamerfont{author}{size=\normalsize}
 \setbeamerfont{institute}{size=\small}
 
-\mode
-\allmodes
+\mode<all>
 
 %% ===================================================================
 %% Title Page Template

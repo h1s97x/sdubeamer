@@ -72,7 +72,7 @@ xelatex main.tex   # 建议执行两遍以解决交叉引用
 
 ```latex
 % 关闭中文支持（纯英文场景）
-\usepackage[nocheinese]{sdubeamer}
+\usepackage[chinese=false]{sdubeamer}
 
 % 自定义主题色
 \usepackage[color=green]{sdubeamer}
