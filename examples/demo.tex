@@ -2,12 +2,12 @@
 % SDUBeamer 完整可编译示例
 % ---------------------------------------------------------------------
 % 编译方式（推荐，支持中文）：
-%   cd examples && TEXINPUTS=..:$TEXINPUTS xelatex demo.tex
-%   TEXINPUTS=..:$TEXINPUTS xelatex demo.tex   # 建议执行两遍以解决交叉引用
+%   cd examples && TEXINPUTS=..:../src:$TEXINPUTS xelatex demo.tex
+%   TEXINPUTS=..:../src:$TEXINPUTS xelatex demo.tex   # 建议执行两遍以解决交叉引用
 %
 % 亦可从仓库根目录编译：
 %   xelatex -output-directory=examples examples/demo.tex
-%   （模板 sdubeamer.sty 位于仓库根目录，需确保可被 TEXINPUTS 找到）
+%   （模板 sdubeamer.sty 位于仓库根目录 src/ 下，需确保可被 TEXINPUTS 找到）
 %
 % 亦可用 latexmk：
 %   latexmk -xelatex -cd examples/demo.tex

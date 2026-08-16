@@ -10,7 +10,7 @@
 * @h1s97x
 
 # 核心 Beamer 主题宏包
-/sdubeamer.sty @h1s97x
+/src/sdubeamer.sty @h1s97x
 
 # 示例与 CI / 构建相关配置
 /examples/ @h1s97x

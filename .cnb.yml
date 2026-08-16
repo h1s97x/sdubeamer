@@ -122,8 +122,11 @@ $:
           image: cnbcool/attachments:latest
           settings:
             attachments:
-              - "./sdubeamer.sty"
+              - "./src/sdubeamer.sty"
               - "./examples"
               - "./assets"
+              - "./doc"
               - "./LICENSE"
               - "./README.md"
+              - "./CHANGELOG.md"
+              - "./CONTRIBUTING.md"

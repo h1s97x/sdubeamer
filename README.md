@@ -12,6 +12,27 @@
 - 硕士研究生答辩
 - 博士研究生答辩
 
+## 目录结构
+
+```
+├── src/                # 模板宏包源码（sdubeamer.sty）
+├── examples/           # 可编译示例（demo.tex）
+├── doc/                # 文档（安装/使用/FAQ）
+├── assets/             # 外部资源（校徽等）
+├── .cnb.yml            # CNB 流水线配置
+└── .github/            # Issue/PR 模板与平台配置
+```
+
+## 安装
+
+下载 `src/sdubeamer.sty` 与 `assets/sdu-logo.jpg` 到你的项目目录，然后在导言区加载：
+
+```latex
+\usepackage[color=blue]{sdubeamer}
+```
+
+详细的安装步骤（本地/在线平台/Release 附件）见 [doc/installation.md](doc/installation.md)。
+
 ## 快速开始
 
 ```latex
@@ -68,12 +89,15 @@ xelatex main.tex   # 建议执行两遍以解决交叉引用
 
 支持的字体集包括 `fandol`（默认）、`windows`、`mac`、`ubuntu` 等，详见 [`ctex` 宏包文档](https://ctan.org/pkg/ctex)。
 
-## 页眉 / 页脚
+> 注意：由于依赖 `xeCJK`/`ctex`，模板**必须使用 `xelatex` 编译**，不支持 `pdflatex`。
 
-模板内置了定制的页眉与页脚，体现山东大学视觉识别：
+## 常见问题
 
-- **页眉**：左侧显示当前章节名（`\section`），下方为一条主题色细线。
-- **页脚**：顶部为一条主题色细线，左侧显示学校名，右侧显示页码（`当前帧 / 总帧数`）。
+遇到编译或使用问题？请查阅 [doc/faq.md](doc/faq.md)。
+
+## 贡献
+
+欢迎贡献代码或文档！请阅读 [CONTRIBUTING.md](CONTRIBUTING.md) 了解贡献流程。
 
 ## 列表 / 彩色块 / 图注 / 超链接
 

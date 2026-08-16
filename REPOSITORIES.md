@@ -8,7 +8,7 @@
 |------|------|-----------|----------|
 | [**sdutex**](https://cnb.cool/h1s97x/sdutex) | 核心包 | `sduthesis.cls`、`sdutex.sty`、`sduthesis.bst` | 底层核心代码，供上层模板复用 |
 | [**sduthesis**](https://cnb.cool/h1s97x/sduthesis) | 论文模板 | 可直接编译的毕业论文模板 | 本科 / 硕士 / 博士论文写作 |
-| [**sdubeamer**](https://cnb.cool/h1s97x/sdubeamer) | 幻灯片模板 | `sdubeamer.sty` | 答辩 / 会议 / 汇报 Beamer 幻灯片 |
+| [**sdubeamer**](https://cnb.cool/h1s97x/sdubeamer) | 幻灯片模板 | `src/sdubeamer.sty` | 答辩 / 会议 / 汇报 Beamer 幻灯片 |
 
 ## 关系结构
 
@@ -54,7 +54,7 @@
 
 独立维护的 **Beamer 幻灯片主题**，用于学位论文答辩、学术会议、工作汇报等场景：
 
-- 提供 `sdubeamer.sty` 宏包，`\usepackage{sdubeamer}` 即可使用
+- 提供 `src/sdubeamer.sty` 宏包，`\usepackage{sdubeamer}` 即可使用
 - 复用山东大学校色（`sdu@primary` 等）与学术视觉风格
 - 与论文模板（sduthesis）共享品牌视觉，形成完整“论文 + 答辩”方案
 

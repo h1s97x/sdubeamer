@@ -28,5 +28,5 @@
 编译时需要将仓库根目录加入 `TEXINPUTS`，例如：
 
 ```bash
-cd examples && TEXINPUTS=..:$TEXINPUTS xelatex demo.tex
+cd examples && TEXINPUTS=..:../src:$TEXINPUTS xelatex demo.tex
 ```
