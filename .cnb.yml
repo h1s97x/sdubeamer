@@ -33,10 +33,10 @@
       script: |
         set -e
         cd examples
-        # 第一遍
-        TEXINPUTS=..:$TEXINPUTS xelatex -interaction=nonstopmode -halt-on-error demo.tex
+        # 第一遍（模板 sdubeamer.sty 位于 src/ 下，需将 src 加入 TEXINPUTS）
+        TEXINPUTS=..:../src:$TEXINPUTS xelatex -interaction=nonstopmode -halt-on-error demo.tex
         # 第二遍：解决目录/交叉引用
-        TEXINPUTS=..:$TEXINPUTS xelatex -interaction=nonstopmode -halt-on-error demo.tex
+        TEXINPUTS=..:../src:$TEXINPUTS xelatex -interaction=nonstopmode -halt-on-error demo.tex
         # 校验 PDF 已生成（保证模板可编译）
         test -f demo.pdf
         echo "=== SDUBeamer 编译验证通过，PDF 产物已生成 ==="
