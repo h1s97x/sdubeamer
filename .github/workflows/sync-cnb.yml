@@ -9,8 +9,16 @@ name: Sync to CNB
 #     （值 = CNB Access Token，可在 CNB「设置 → 访问令牌」生成，需仓库读写权限）。
 #   - 仅在源分支非空时推送（空分支跳过），不删除远端分支。
 #
-# 防同步环：仅同步代码路径，排除同步配置自身（.cnb* / .cnb/）与 CI 文件
-#   （.github/），避免 GitHub↔CNB 相互推送造成死循环。
+# 防同步环：
+#   1) 仅同步代码路径，排除同步配置自身（.cnb* / .cnb/）与 CI 文件（.github/）；
+#   2) 关键：当 CNB 通过 .cnb.yml 的 sync-to-github 把提交推回 GitHub 时，这些提交的
+#      committer 是 git-sync 插件（git-sync@plugin.local）。job 级 if 条件据此跳过本
+#      workflow，避免「CNB→GitHub 触发本反向同步→再回灌 CNB→又触发 CNB 同步」的死循环。
+#      只有真正在 GitHub 上直接改代码（非 git-sync 提交）才会触发反向同步回灌 CNB。
+#
+# ⚠️ 魔法字符串常量：git-sync 插件的 committer 邮箱固定为 git-sync@plugin.local。
+#    该值由 CNB 侧 tencentcom/git-sync 插件写入，与下方 job 级 if 条件强耦合；
+#    若未来插件变更 committer 身份，需同步更新此常量（本 workflow 内唯一引用点）。
 #
 # 注意：本仓库主分支在 CNB，正常情况下 .cnb.yml 已自动把 CNB 提交推回 GitHub，
 #       本 workflow 主要覆盖「直接改 GitHub 再回灌 CNB」的场景，为兜底方向。
@@ -30,7 +38,15 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    if: github.repository == 'h1s97x/sdubeamer'
+    # 跳过由 git-sync 插件（CNB 侧 .cnb.yml 的 sync-to-github）推送到 GitHub 的提交，
+    # 避免形成双向同步环。仅处理真正在 GitHub 上直接修改的提交。
+    #
+    # 兜底说明：个别 push 场景下 github.event.head_commit 可能为 null。此处显式
+    # 要求 head_commit 存在（fail-closed）——异常场景下宁可跳过本次反向同步，
+    # 也不冒险回灌 CNB，从而在任何情况下都优先保证切断同步环。
+    if: github.repository == 'h1s97x/sdubeamer' &&
+        github.event.head_commit != null &&
+        github.event.head_commit.committer.email != 'git-sync@plugin.local'
     steps:
       - uses: actions/checkout@v4
         with:
