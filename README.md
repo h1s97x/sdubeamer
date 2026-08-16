@@ -16,7 +16,7 @@
 
 ```latex
 \documentclass{beamer}
-\usepackage[color=blue]{sdubeamer}   % 默认已启用中文支持；可选 blue(默认)/red/cyan/green/purple
+\usepackage[color=blue, degree=master]{sdubeamer}   % 默认已启用中文支持
 
 \begin{document}
 
@@ -101,6 +101,18 @@ xelatex main.tex   # 建议执行两遍以解决交叉引用
 \sdufooter{山东大学 XX 学院}
 ```
 
+## 封面页设计
+
+封面页采用**学位论文答辩专用布局**，包含以下元素：
+
+- **校徽**：默认从 `assets/sdu-logo.jpg` 加载（需将仓库根目录加入 `TEXINPUTS`）
+- **学校中英文全称**：中文名默认为「山东大学」，英文名默认为「Shandong University」
+- **学位类型**：根据 `degree` 选项显示「本科毕业论文答辩 / 硕士学位论文答辩 / 博士学位论文答辩」
+- **论文标题**、作者、学院、日期等信息
+
+> ℹ️ 仓库内的 `assets/sdu-logo.jpg` 为山东大学校徽，模板封面页会自动加载。
+> 如需更换校徽，直接替换该文件或通过 `logo` 选项指定路径，详见 [`assets/README.md`](assets/README.md)。
+
 ## 可选选项
 
 ```latex
@@ -112,12 +124,24 @@ xelatex main.tex   # 建议执行两遍以解决交叉引用
 
 % 自定义页脚学校名
 \usepackage[school=山东大学 数学学院]{sdubeamer}
+
+% 自定义封面英文校名
+\usepackage[enname=School of Mathematics, Shandong University]{sdubeamer}
+
+% 自定义校徽文件路径
+\usepackage[logo=assets/my-logo.png]{sdubeamer}
+
+% 指定答辩类型（undergrad / master / doctor）
+\usepackage[degree=doctor]{sdubeamer}
 ```
 
 - `chinese`（默认开启）：接入 `ctex` 中文排版
 - `fontset`（默认 `fandol`）：指定 `ctex` 字体集
-- `color`（默认 `blue`）：主题色
+- `color`（默认 `blue`）：主题色，可选 `blue` / `red` / `cyan` / `green` / `purple`
 - `school`（默认 `山东大学`）：页脚显示的学校名
+- `enname`（默认 `Shandong University`）：封面页英文校名
+- `logo`（默认 `assets/sdu-logo.jpg`）：封面页校徽文件路径
+- `degree`（默认 `master`）：答辩类型，可选 `undergrad` / `master` / `doctor`
 
 ## 相关仓库
 

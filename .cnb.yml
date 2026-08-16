@@ -124,5 +124,6 @@ $:
             attachments:
               - "./sdubeamer.sty"
               - "./examples"
+              - "./assets"
               - "./LICENSE"
               - "./README.md"

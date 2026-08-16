@@ -8,6 +8,7 @@
 \RequirePackage{expl3}
 % \ProcessKeyOptions 由 l3keys2e 提供，显式加载以消除对 beamer 的隐式依赖
 \RequirePackage{l3keys2e}
+\RequirePackage{graphicx}
 \ExplSyntaxOn
 
 \DeclareKeys {
@@ -23,6 +24,15 @@
   % 页脚学校名（默认山东大学，可通过 school 选项自定义）
   school .tl_set:N  = \l_@@_school_tl,
   school .initial:n = { 山东大学 },
+  % 封面英文校名（默认 Shandong University）
+  enname .tl_set:N  = \l_@@_enname_tl,
+  enname .initial:n = { Shandong~University },
+  % 校徽文件路径（默认 assets/sdu-logo.jpg）
+  logo .tl_set:N  = \l_@@_logo_tl,
+  logo .initial:n = { assets/sdu-logo.jpg },
+  % 答辩类型（默认硕士），可选：undergrad / master / doctor
+  degree .tl_set:N  = \l_@@_degree_tl,
+  degree .initial:n = { master },
 }
 
 \ProcessKeyOptions
@@ -30,6 +40,11 @@
 % 将页脚学校名复制到普通命令 \sdufootertext，供非 expl3 上下文使用
 % （\tl_set_eq:NN 使 \sdufootertext 与 expl3 变量同义，类型可被非 expl3 模式引用）
 \tl_set_eq:NN \sdufootertext \l_@@_school_tl
+
+% 将封面英文校名、校徽路径、答辩类型复制到普通命令，供非 expl3 上下文使用
+\tl_set_eq:NN \sduenname \l_@@_enname_tl
+\tl_set_eq:NN \sdulogopath \l_@@_logo_tl
+\tl_set_eq:NN \sdudegreetype \l_@@_degree_tl
 
 %% ===================================================================
 %% Chinese Support (ctex / xeCJK)
@@ -117,19 +132,59 @@
 %% Title Page Template
 %% ===================================================================
 
+% 根据 degree 选项确定封面上的学位类型文案（用于“学位论文答辩”页）
+\def\sdu@degreetext{%
+  \str_case:Vn \l_@@_degree_tl
+    {
+      {undergrad} { 本科毕业论文答辩 }
+      {master}     { 硕士学位论文答辩 }
+      {doctor}     { 博士学位论文答辩 }
+    }
+    { 硕士学位论文答辩 }
+}
+
+% 供用户临时覆盖学位类型文案的命令
+\newcommand\sdudegree[1]{\renewcommand\sdu@degreetext{#1}}
+
+% 供用户临时覆盖英文校名的命令
+\newcommand\sduennamecmd[1]{\renewcommand\sduenname{#1}}
+
+% 封面页：校徽 + 学校中英文全称 + 学位论文答辩专用布局
 \defbeamertemplate{title page}{sdu}{
   \begin{centering}
-    \vspace*{2cm}
-    {\usebeamerfont{title}\usebeamercolor{title}\inserttitle\par}
-    \vspace*{1cm}
-    {\usebeamerfont{subtitle}\usebeamercolor{title}\insertsubtitle\par}
-    \vspace*{2cm}
+    % ---------- 顶部校徽 ----------
+    \IfFileExists{\sdulogopath}
+      {\includegraphics[height=2.5cm]{\sdulogopath}}
+      {\color{sdu@primary}\rule{2.5cm}{2.5cm}}% 文件缺失时用主题色方块占位
+    \par\vspace*{0.5cm}
+
+    % ---------- 学校中英文全称 ----------
+    {\Large\bfseries\color{sdu@primary} \l_@@_school_tl\par}
+    \vspace*{0.15cm}
+    {\small\color{sdu@secondary} \sduenname\par}
+    \vspace*{0.6cm}
+
+    % ---------- 学位论文答辩标题 ----------
+    {\normalsize\color{sdu@accent} \textbf{\sdu@degreetext}\par}
+
+    % ---------- 分隔线 ----------
+    \vspace*{0.4cm}
+    {\color{sdu@primary}\rule{0.6\textwidth}{0.6pt}\par}
+    \vspace*{0.4cm}
+
+    % ---------- 论文/答辩标题 ----------
+    {\usebeamerfont{title}\color{sdu@primary}\inserttitle\par}
+    \vspace*{0.4cm}
+    {\usebeamerfont{subtitle}\insertsubtitle\par}
+    \vspace*{0.8cm}
+
+    % ---------- 作者信息 ----------
     {\usebeamerfont{author}\insertauthor\par}
-    \vspace*{0.5cm}
+    \vspace*{0.3cm}
     {\usebeamerfont{institute}\insertinstitute\par}
-    \vspace*{0.5cm}
+    \vspace*{0.3cm}
     {\usebeamerfont{date}\insertdate\par}
-    \vspace*{2cm}
+    \vspace*{1.5cm}
   \end{centering}
 }
 
