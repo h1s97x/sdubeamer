@@ -18,6 +18,30 @@
 # 当作 !reference 引用源，Schema 强制其为 array/object，字符串会触发 Schema 校验失败。
 # 维护者直接内联，换维护者时统一改下方两处（PR reviewer / Issue assignee）。
 
+# ===== 编译验证复用片段（TeX Live 编译 demo 并校验 PDF 产物）=====
+# 任务来源：ISSUE #9 —— 每次提交用 TeX Live 编译 demo，保证模板始终可编译。
+# 使用 xelatex 编译（模板依赖 ctex/xeCJK，不能使用 pdflatex）；编译两遍解决交叉引用；
+# 编译成功且生成 demo.pdf 则流水线通过，失败则 CI 报错拦截提交。
+# 产物 examples/demo.pdf 会随构建被 CNB 收集为「构建产物」供下载。
+.x-texlive-compile: &texlive-compile
+  name: compile-verify
+  docker:
+    # 完整 TeX Live 镜像，内置 ctex + fandol 字体，满足模板中文编译要求
+    image: ghcr.io/xu-cheng/texlive-full:latest
+  stages:
+    - name: compile demo with xelatex
+      script: |
+        set -e
+        cd examples
+        # 第一遍
+        TEXINPUTS=..:$TEXINPUTS xelatex -interaction=nonstopmode -halt-on-error demo.tex
+        # 第二遍：解决目录/交叉引用
+        TEXINPUTS=..:$TEXINPUTS xelatex -interaction=nonstopmode -halt-on-error demo.tex
+        # 校验 PDF 已生成（保证模板可编译）
+        test -f demo.pdf
+        echo "=== SDUBeamer 编译验证通过，PDF 产物已生成 ==="
+        ls -lh demo.pdf
+
 main:
   push:
     - name: sync-to-github
@@ -36,6 +60,9 @@ main:
             # Rebase 模式：保留 GitHub 仓库特有的平台文件（如 .github/workflows/*.yml），
             # 同时避免无条件 force 覆盖 GitHub 远端的新提交。
             sync_mode: rebase
+
+    # 编译验证：每次 push 到 main 都用 TeX Live 编译 demo，保证模板始终可编译
+    - <<: *texlive-compile
 
   # PR 创建后自动分配处理人和审查人
   # 使用 git:reviewer 内置任务（无需脚本、自动注入鉴权）。
@@ -57,6 +84,9 @@ main:
           type: git:reviewer
           options:
             type: add-reviewer-from-repo-members
+
+    # 编译验证：PR 提交时用 TeX Live 编译 demo，作为合并前的质量门禁
+    - <<: *texlive-compile
 
 # 兜底分支：web_trigger / issue.* 等事件
 $:
